@@ -435,7 +435,6 @@ a:focus-visible {
 }
 
 .box--teaser .box__headline {
-	font-family: var(--font-body);
 	font-size: clamp(1.25rem, 9cqi, 2rem);
 	line-height: 1;
 }
