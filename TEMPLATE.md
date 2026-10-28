@@ -23,6 +23,7 @@ window.SITE_CONFIG = {
   title: 'Page title',              // <title>
   lang: 'en',                       // <html lang>
   theme: { ... },                   // colours
+  fonts: { ... },                   // font stylesheet + families
   motion: { open: 0.9, close: 0.6 },// seconds
   frame: { ... },                   // 1. corner texts + header navigation
   background: { ... },              // 2. background image
@@ -47,7 +48,18 @@ Each key becomes `--color-<key>` on `<html>`. Keys used by the CSS:
 | `tagline` | hero tagline, box text |
 | `box` | default box background |
 
-Fonts are set with `--font-body` and `--font-display` in `css/template.css`. The demo uses Codrops' Typekit kit (see `TODOS.md`).
+### `fonts`
+
+```js
+fonts: {
+  stylesheet: '/assets/google-fonts/fonts.css',            // optional: @font-face rules, loaded as a <link>
+  title: '"UnifrakturMaguntia", "sabbath-black", serif',   // hero title
+  display: '"Cinzel", Georgia, serif',                     // box headlines (and the title, if title is not set)
+  body: '"Lato", Arial, sans-serif'                        // everything else
+}
+```
+
+Each key is optional and becomes `--font-<key>`; the defaults in `css/template.css` are Codrops' Typekit kit (europa, sabbath-black, see `TODOS.md`). Keep a fallback in each list in case the stylesheet doesn't load.
 
 ## 1. `frame`
 

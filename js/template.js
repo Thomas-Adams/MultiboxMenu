@@ -207,6 +207,12 @@
     if ( cfg.title ) document.title = cfg.title;
     if ( cfg.lang ) document.documentElement.lang = cfg.lang;
     Object.entries(cfg.theme || {}).forEach(([key, value]) => document.documentElement.style.setProperty(`--color-${key}`, value));
+    // Fonts: a stylesheet with @font-face rules, and --font-title / --font-display / --font-body.
+    const fonts = cfg.fonts || {};
+    if ( fonts.stylesheet ) document.head.append(h('link', {rel: 'stylesheet', href: fonts.stylesheet}));
+    ['title', 'display', 'body'].forEach(key => {
+        if ( fonts[key] ) document.documentElement.style.setProperty(`--font-${key}`, fonts[key]);
+    });
     if ( cfg.motion ) {
         if ( cfg.motion.open != null ) document.documentElement.style.setProperty('--dur-open', `${cfg.motion.open}s`);
         if ( cfg.motion.close != null ) document.documentElement.style.setProperty('--dur-close', `${cfg.motion.close}s`);
