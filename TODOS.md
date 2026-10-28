@@ -23,7 +23,7 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 
 ## Template (`template.html`, see `TEMPLATE.md`)
 
-- [ ] Replace Codrops' Typekit kit (`zjs0dpp`) with your own fonts. That kit belongs to Codrops and is only for the demo. Partly done: the `fonts` config (`TEMPLATE.md`) sets stylesheet and families; the Zope demo uses UnifrakturMaguntia from `/assets/google-fonts` for the hero title. Body text and box headlines still use the kit.
+- [ ] Replace Codrops' Typekit kit (`zjs0dpp`) with your own fonts. That kit belongs to Codrops and is only for the demo. Done for the Zope page: it no longer loads the kit and uses UnifrakturMaguntia (title), Cinzel (headlines) and Lato (body) from `/assets/google-fonts` via the `fonts` config (`TEMPLATE.md`). Still open for the static `template.html`/`index*.html`, which have no access to `/assets`.
 - [x] Pin Leaflet: `multibox.js` loads unpkg with SRI hashes; the Zope product self-hosts it (`static/leaflet`)
 - [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use)
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
