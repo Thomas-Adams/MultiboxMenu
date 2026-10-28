@@ -29,7 +29,15 @@
         el.crossOrigin = '';
     };
 
-    const loadLeaflet = () => window.L ? Promise.resolve(window.L) : new Promise((resolve, reject) => {
+    const load = (el) => new Promise((resolve, reject) => {
+        el.onload = resolve;
+        el.onerror = reject;
+        document.head.append(el);
+    });
+
+    // Wait for the CSS as well as the JS: the map layout needs it, and without it
+    // Leaflet guesses the marker image path wrongly (".../leafletmarker-icon.png").
+    const loadLeaflet = () => window.L ? Promise.resolve(window.L) : (() => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = `${LEAFLET_URL}leaflet.css`;
@@ -37,10 +45,12 @@
         const script = document.createElement('script');
         script.src = `${LEAFLET_URL}leaflet.js`;
         pin(script, 'leaflet.js');
-        script.onload = () => resolve(window.L);
-        script.onerror = reject;
-        document.head.append(link, script);
-    });
+        return Promise.all([load(link), load(script)]).then(() => {
+            // Explicit, so the marker icons never depend on the path detection.
+            window.L.Icon.Default.imagePath = `${LEAFLET_URL}images/`;
+            return window.L;
+        });
+    })();
 
     const mapFailed = (el) => {
         const status = el.querySelector('.box__map-status');
