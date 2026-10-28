@@ -87,12 +87,12 @@ src/Products.Codrops/
 - [x] Step 3: `js/multibox.js` (behaviour) split from `js/template.js` (renderer); `template.html` loads both.
 - [x] Step 2: the JSON field is replaced by schema fields on the site (*Settings* and *Grid* tabs) and one object per box (5 types, *Edit* tab each, addable only inside a site). Lists are one entry per line (`Label | URL`, `text | position | vertical`, `lat, lng | popup`). The Grid tab checks the areas against the boxes; a box form checks its area against the grid. `getConfig()` / `importConfig()` convert to and from the `SITE_CONFIG` structure (a new site imports `default_config.json`; a test checks the round trip).
 - [x] Step 4: *Import/Export* tab (download `config.json` / `site.config.js`; import a file or pasted JSON, all or nothing), Leaflet 1.9.4 self-hosted in `static/leaflet` (npm tarball, integrity checked; unpkg in `template.html` now pinned with SRI), favicon.
-- [ ] Open: `static/css|js|img|favicon.ico` are symlinks into this repo, so a clone of the product repo alone has no CSS/JS. Before deploying: copy them in (or package them) instead of linking.
+- [x] Deployment: `static/` holds real copies of the five files the page needs (`template.css`, `multibox.js`, `img/1.jpg`, `img/2.jpg`, `favicon.ico`); `sync_static.py` copies them from this repo, and a test fails while they are out of date. The built wheel contains static/ and the ZMI add forms.
 
-Tests: `cd ../Zope && bin/test -s Products.Codrops` (35 tests; the functional layer uses Chameleon like the instance).
+Tests: `cd ../Zope && bin/test -s Products.Codrops` (39 tests; the functional layer uses Chameleon like the instance).
 
 ## Decisions
 
-- [x] **Where the CSS/JS live:** `MultiboxMenu/` is the source; `static/css`, `static/js`, `static/img` in the product are symlinks to it.
+- [x] **Where the CSS/JS live:** `MultiboxMenu/` is the source; the product keeps copies, updated with `sync_static.py` (first symlinks, replaced for deployment).
 - [x] **Git:** own repository in `../Zope/src/Products.Codrops` (branch `main`).
 - [x] five.formlib (not z3c.form + plone.z3cform) and server-side rendering.
