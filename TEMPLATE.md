@@ -174,7 +174,7 @@ The `main` font size follows the box size (container query units `cqi`/`cqh`), s
   attribution: '…' }                    // required by most tile servers if you change `tiles`
 ```
 
-- Leaflet 1.9.4 (BSD-2) is loaded by `multibox.js` from unpkg **only if** an `osm` box exists (`data-leaflet` on the script tag overrides the location). The map options travel as JSON in the box's `data-map` attribute. If loading fails, the box shows "The map could not be loaded."
+- Leaflet 1.9.4 (BSD-2) is loaded by `multibox.js` from unpkg (pinned with SRI `integrity` hashes) **only if** an `osm` box exists. `data-leaflet` on the script tag points to a self-hosted copy instead (the Zope product does that). The map options travel as JSON in the box's `data-map` attribute. If loading fails, the box shows "The map could not be loaded."
 - Default tiles come from `tile.openstreetmap.org`. They are fine for a demo or low traffic, but the [OSM tile usage policy](https://operations.osmfoundation.org/policies/tiles/) asks heavier users to use their own or a commercial tile provider. Keep the attribution visible.
 - The map is created while the menu is closed. The boxes keep their size while hidden, and `invalidateSize()` runs on every open in case the window was resized.
 

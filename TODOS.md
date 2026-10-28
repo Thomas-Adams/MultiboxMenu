@@ -24,7 +24,7 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 ## Template (`template.html`, see `TEMPLATE.md`)
 
 - [ ] Replace Codrops' Typekit kit (`zjs0dpp`) with your own fonts. That kit belongs to Codrops and is only for the demo.
-- [ ] Pin Leaflet with an SRI `integrity` hash, or self-host it (currently `unpkg.com/leaflet@1.9.4` without a hash)
+- [x] Pin Leaflet: `multibox.js` loads unpkg with SRI hashes; the Zope product self-hosts it (`static/leaflet`)
 - [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use)
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
 - [ ] Optional: background tilt (`TiltFx`) as a config option, once the animation library is decided (see above)

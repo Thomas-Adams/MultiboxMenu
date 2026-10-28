@@ -6,10 +6,16 @@
  * Markup it reads:
  *   <body class="loading" data-preload="img.jpg">   loader waits for this image (4 s fallback)
  *   <div class="box__map" data-map='{...}'>          center, zoom, scrollZoom, markers, tiles, attribution
- *   <script src="multibox.js" data-leaflet="…/">     optional: where leaflet.js/.css live
+ *   <script src="multibox.js" data-leaflet="…/">     optional: self-hosted leaflet.js/.css (default: unpkg with SRI)
  */
 {
-    const LEAFLET_URL = document.currentScript?.dataset.leaflet || 'https://unpkg.com/leaflet@1.9.4/dist/';
+    const LEAFLET_CDN = 'https://unpkg.com/leaflet@1.9.4/dist/';
+    // SRI hashes of Leaflet 1.9.4, only checked for the CDN copy.
+    const LEAFLET_SRI = {
+        'leaflet.css': 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
+        'leaflet.js': 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
+    };
+    const LEAFLET_URL = document.currentScript?.dataset.leaflet || LEAFLET_CDN;
     const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
@@ -17,12 +23,20 @@
 
     const maps = [];
 
+    const pin = (el, file) => {
+        if ( LEAFLET_URL !== LEAFLET_CDN ) return;
+        el.integrity = LEAFLET_SRI[file];
+        el.crossOrigin = '';
+    };
+
     const loadLeaflet = () => window.L ? Promise.resolve(window.L) : new Promise((resolve, reject) => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = `${LEAFLET_URL}leaflet.css`;
+        pin(link, 'leaflet.css');
         const script = document.createElement('script');
         script.src = `${LEAFLET_URL}leaflet.js`;
+        pin(script, 'leaflet.js');
         script.onload = () => resolve(window.L);
         script.onerror = reject;
         document.head.append(link, script);
