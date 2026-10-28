@@ -1,0 +1,134 @@
+/**
+ * menu-css.css
+ * CSS-only open/close animations for the Multibox Menu (loaded after base.css).
+ * JS only toggles .menu--open / .menu--closed on nav.menu (see js/demo-css.js).
+ *
+ * Rule of thumb used throughout:
+ * the base rule holds the closed state + the CLOSING transition,
+ * the .menu--open rule holds the open state + the OPENING transition.
+ */
+:root {
+	--ease-open: cubic-bezier(0.23, 1, 0.32, 1);      /* ≈ Quint.easeOut */
+	--ease-close: cubic-bezier(0.77, 0, 0.175, 1);    /* ≈ Quart.easeInOut */
+	--ease-inout: cubic-bezier(0.86, 0, 0.07, 1);     /* ≈ Quint.easeInOut */
+	--ease-fade: cubic-bezier(0.25, 0.46, 0.45, 0.94);/* ≈ Quad.easeOut */
+	--dur-open: 0.9s;
+	--dur-close: 0.6s;
+}
+
+/* Box reveal: direction as an offset, the inner element moves by the negative offset.
+   Use 0% (not 0): calc(-1 * 0) is a number and invalid inside translate(). */
+.menu__item {
+	--dx: 0%;
+	--dy: 0%;
+}
+.menu__item[data-direction="bt"] { --dy: 101%; }
+.menu__item[data-direction="tb"] { --dy: -101%; }
+.menu__item[data-direction="lr"] { --dx: -101%; }
+.menu__item[data-direction="rl"] { --dx: 101%; }
+.menu__item:not([data-direction]) { --dx: 101%; --dy: 101%; }
+
+.menu__item {
+	transform: translate(var(--dx), var(--dy));
+	/* Hidden boxes can't be focused; visibility flips only after the slide-out. */
+	visibility: hidden;
+	transition: transform var(--dur-close) var(--ease-close), visibility 0s var(--dur-close);
+}
+
+.menu__item-inner {
+	transform: translate(calc(-1 * var(--dx)), calc(-1 * var(--dy)));
+	transition: transform var(--dur-close) var(--ease-close);
+}
+
+.menu--open .menu__item {
+	transform: none;
+	visibility: visible;
+	transition: transform var(--dur-open) var(--ease-open), visibility 0s;
+}
+
+.menu--open .menu__item-inner {
+	transform: none;
+	transition: transform var(--dur-open) var(--ease-open);
+}
+
+/* Main links: fade + rise, staggered by --i (set in the HTML), reversed on close via --n. */
+.mainmenu__item {
+	opacity: 0;
+	transform: translateY(50%);
+	transition:
+		opacity 0.2s var(--ease-close) calc((var(--n) - 1 - var(--i)) * 0.1s),
+		transform 0.2s var(--ease-close) calc((var(--n) - 1 - var(--i)) * 0.1s),
+		color 0.3s;
+}
+
+.menu--open .mainmenu__item {
+	opacity: 1;
+	transform: none;
+	transition:
+		opacity var(--dur-open) var(--ease-open) calc(var(--i) * 0.1s),
+		transform var(--dur-open) var(--ease-open) calc(var(--i) * 0.1s),
+		color 0.3s;
+}
+
+/* Side menu: line mask (the link has overflow: hidden, the span slides up into it). */
+.sidemenu__item-inner {
+	transform: translateY(100%);
+	transition: transform 0.2s var(--ease-close) calc((var(--n) - 1 - var(--i)) * 0.05s);
+}
+
+.menu--open .sidemenu__item-inner {
+	transform: none;
+	transition: transform 0.5s var(--ease-inout) calc(var(--i) * 0.05s);
+}
+
+/* "Learn how to participate" link. */
+.menu__item-link {
+	transform: translateX(10%);
+	transition: transform var(--dur-close) var(--ease-close);
+}
+
+.menu--open .menu__item-link {
+	transform: none;
+	transition: transform var(--dur-open) var(--ease-open);
+}
+
+/* Open button: fades out on open, back in with a delay on close. */
+.action--menu {
+	transition: opacity 0.3s var(--ease-fade) 0.3s;
+}
+
+.menu--open .action--menu {
+	opacity: 0;
+	transition: opacity 0.6s var(--ease-open);
+}
+
+/* Close button: spins 0→180° in, then on to 270° out. A transition would reverse
+   (180→0), so keyframes are used. .menu--closed is only set after a close, so
+   nothing plays on page load. */
+@keyframes closeCtrlIn {
+	from { opacity: 0; rotate: 0deg; }
+	to   { opacity: 1; rotate: 180deg; }
+}
+
+@keyframes closeCtrlOut {
+	from { opacity: 1; rotate: 180deg; }
+	to   { opacity: 0; rotate: 270deg; }
+}
+
+.menu--open .action--close {
+	animation: closeCtrlIn 0.6s var(--ease-open) both;
+}
+
+.menu--closed .action--close {
+	animation: closeCtrlOut 0.6s var(--ease-close) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.menu *,
+	.menu *::before,
+	.menu *::after {
+		transition-duration: 0.01ms !important;
+		transition-delay: 0s !important;
+		animation-duration: 0.01ms !important;
+	}
+}
