@@ -2,6 +2,7 @@
 
 Notes on how the demo is built, so the same approach can be used for other grids and reveal menus.
 Files: `index.html`, `css/base.css`, `js/demo.js`. Libraries: Anime.js 4 (`js/anime.min.js`, a slim build with only `animate`, `stagger` and `utils`) and imagesLoaded. The demo used TweenMax (GSAP 2) until October 2026.
+Fonts: Lato (body) and UnifrakturMaguntia (title, quote), self-hosted in `fonts/` (`fonts/fonts.css`). The original demo used Codrops' Typekit kit (europa, sabbath-black).
 CSS-only variant (no animation library, no tilt): `index-css.html`, `css/menu-css.css`, `js/demo-css.js`. See section 6.
 Config-driven template built on the CSS-only variant: `template.html` + `site.config.js`. See `TEMPLATE.md`.
 

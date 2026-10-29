@@ -20,7 +20,7 @@ body {
 	--color-info: #57535a;
 	--color-title: #e23434;
 	--color-tagline: #e2e2e2;
-	font-family: "europa", Futura, Arial, sans-serif;
+	font-family: "Lato", Futura, Arial, sans-serif;
 	min-height: 100vh;
 	color: #57585c;
 	color: var(--color-text);
@@ -187,7 +187,7 @@ main {
 }
 
 .content__title {
-	font-family: "sabbath-black", serif;
+	font-family: "UnifrakturMaguntia", serif;
 	font-size: 14vw;
 	font-weight: normal;
 	mix-blend-mode: screen;
@@ -363,7 +363,7 @@ main {
 	text-align: center;
 	max-width: 70%;
 	color: var(--color-quote);
-	font-family: "sabbath-black",serif;
+	font-family: "UnifrakturMaguntia", serif;
 }
 
 .menu__item-link {

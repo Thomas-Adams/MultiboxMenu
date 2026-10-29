@@ -53,13 +53,13 @@ Each key becomes `--color-<key>` on `<html>`. Keys used by the CSS:
 ```js
 fonts: {
   stylesheet: '/assets/google-fonts/fonts.css',            // optional: @font-face rules, loaded as a <link>
-  title: '"UnifrakturMaguntia", "sabbath-black", serif',   // hero title
+  title: '"UnifrakturMaguntia", Georgia, serif',          // hero title
   display: '"Cinzel", Georgia, serif',                     // box headlines (and the title, if title is not set)
   body: '"Lato", Arial, sans-serif'                        // everything else
 }
 ```
 
-Each key is optional and becomes `--font-<key>`; the defaults in `css/template.css` are Codrops' Typekit kit (europa, sabbath-black, see `TODOS.md`). Keep a fallback in each list in case the stylesheet doesn't load.
+Each key is optional and becomes `--font-<key>`; the defaults in `css/template.css` are the same three fonts. `template.html` loads them from `fonts/fonts.css` (self-hosted); the Zope page loads them from `/assets/google-fonts`. Keep a fallback in each list in case the stylesheet doesn't load.
 
 ## 1. `frame`
 

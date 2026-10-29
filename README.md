@@ -12,6 +12,7 @@ A simple grid-powered multibox menu that shows with a reveal animation.
 
 - [imagesLoaded](https://imagesloaded.desandro.com/) by Dave DeSandro
 - [Anime.js](https://animejs.com/) by Julian Garnier
+- Fonts: [UnifrakturMaguntia](https://fonts.google.com/specimen/UnifrakturMaguntia), [Cinzel](https://fonts.google.com/specimen/Cinzel) and [Lato](https://fonts.google.com/specimen/Lato) (SIL Open Font License, self-hosted in `fonts/`)
 - Images from [Unsplash.com](https://unsplash.com/)
 - Map made with [Fantasy Map Generator](https://azgaar.github.io/Fantasy-Map-Generator/)
 
