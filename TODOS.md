@@ -25,7 +25,7 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 
 - [x] Replace Codrops' Typekit kit (`zjs0dpp`) with your own fonts. The Zope page loads UnifrakturMaguntia (title), Cinzel (headlines) and Lato (body) from `/assets/google-fonts` via the `fonts` config (`TEMPLATE.md`). The static `template.html`/`index*.html` load the same fonts self-hosted from `fonts/` (from the `@fontsource` npm packages, OFL).
 - [x] Pin Leaflet: `multibox.js` loads unpkg with SRI hashes; the Zope product self-hosts it (`static/leaflet`)
-- [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use)
+- [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use). Postponed until the site is really hosted (for now it's a playground). Candidates: Stadia Maps, MapTiler, self-hosted Protomaps.
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
 - [x] Optional: background tilt (`TiltFx`) as a config option: `background.tilt` (`TEMPLATE.md` §2). Done with CSS transitions in `template.css` + `multibox.js`, no animation library.
 
