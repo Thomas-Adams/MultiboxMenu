@@ -23,6 +23,7 @@
 	--ease-inout: cubic-bezier(0.86, 0, 0.07, 1);     /* ≈ Quint.easeInOut */
 	--ease-fade: cubic-bezier(0.25, 0.46, 0.45, 0.94);/* ≈ Quad.easeOut */
 	--ease-hover: cubic-bezier(0.2, 1, 0.8, 1);
+	--ease-expo: cubic-bezier(0.19, 1, 0.22, 1);      /* ≈ Expo.easeOut */
 	--dur-open: 0.9s;
 	--dur-close: 0.6s;
 }
@@ -167,6 +168,33 @@ a:focus-visible {
 	background-color: var(--color-bg);
 	background-position: 50% 0%;
 	background-size: cover;
+}
+
+/* Background tilt (background.tilt): multibox.js adds the layers, sets --l (1…n) on each
+   and --mx / --my (-1…1, mouse position) on .hero__bg. Layer l moves l px against the mouse
+   and turns l°, so higher layers move more. Every change restarts the 1.5 s ease-out
+   transition from where the layer is, which makes the layers trail behind the cursor. */
+.hero__bg--tilt {
+	perspective: 1000px;
+}
+
+.hero__bg-layer {
+	position: absolute;
+	inset: 0;
+	background-size: cover;
+	opacity: 0.3;
+	transform:
+		translate3d(calc(var(--l) * var(--mx, 0) * -1px), calc(var(--l) * var(--my, 0) * -1px), 0)
+		rotateX(calc(var(--my, 0) * 2deg))
+		rotateY(calc(var(--l) * var(--mx, 0) * 1deg))
+		scale(calc(1 - var(--my, 0) * 0.03));
+	transition: transform 1.5s var(--ease-fade);
+}
+
+/* Hovering the menu button: the layers settle one after the other. */
+.hero__bg--rest .hero__bg-layer {
+	transform: translate3d(0, 0, 0);
+	transition: transform 1.5s var(--ease-expo) calc((var(--l) - 1) * 0.07s);
 }
 
 /* Positioned so z-index also works when .hero is not a flex container. */

@@ -27,7 +27,7 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 - [x] Pin Leaflet: `multibox.js` loads unpkg with SRI hashes; the Zope product self-hosts it (`static/leaflet`)
 - [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use)
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
-- [ ] Optional: background tilt (`TiltFx`) as a config option, using Anime.js like `demo.js`
+- [x] Optional: background tilt (`TiltFx`) as a config option: `background.tilt` (`TEMPLATE.md` §2). Done with CSS transitions in `template.css` + `multibox.js`, no animation library.
 
 ## Known issues
 

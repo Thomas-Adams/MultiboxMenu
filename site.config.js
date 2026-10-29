@@ -35,8 +35,8 @@ window.SITE_CONFIG = {
         ]
     },
 
-    // 2. Background image behind the hero.
-    background: { image: 'img/1.jpg', position: '50% 0%' },
+    // 2. Background image behind the hero. tilt: true (4 layers) or a number of layers follow the mouse.
+    background: { image: 'img/1.jpg', position: '50% 0%', tilt: true },
     hero: { title: 'Carmeca', tagline: "Europe's most immersive LARP experience" },
 
     // 3. Grid of the menu overlay (desktop ≥ 53em). Every area must be a rectangle.

@@ -88,6 +88,7 @@ A global flag turns the effect off:
 
 - `layout()` copies the image from `.background` (`getComputedStyle(this.DOM.main).backgroundImage`), so changing the inline style on `.background` changes all the layers too.
 - More layers or a larger `val` gives a stronger ghosting effect. Lower opacity makes it subtler.
+- The template has the same effect without a library: `background.tilt` (`TEMPLATE.md` §2). There, JS only writes the mouse position to `--mx`/`--my`, and each layer's transform is a `calc()` of those and its index `--l`, with `transition: transform 1.5s` ease-out. A transition that is interrupted restarts from where the layer is, which gives the same trailing as restarting the tween on every mousemove.
 
 ---
 

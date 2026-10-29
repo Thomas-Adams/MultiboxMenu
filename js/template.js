@@ -55,7 +55,9 @@
         // Set directly (not via a custom property) so the URL resolves against the page.
         if ( background.image ) bg.style.backgroundImage = `url("${background.image}")`;
         if ( background.position ) bg.style.backgroundPosition = background.position;
-        return h('div', {class: 'hero'},
+        // Background tilt (multibox.js): true = 4 layers, or the number of layers.
+        const tilt = background.tilt === true ? 4 : background.tilt;
+        return h('div', {class: 'hero', 'data-tilt': tilt || null},
             bg,
             hero.title && h('h2', {class: 'hero__title'}, hero.title),
             hero.tagline && h('p', {class: 'hero__tagline'}, hero.tagline)

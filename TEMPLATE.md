@@ -77,11 +77,15 @@ Every key is optional. The frame is fixed above the hero and lets clicks pass th
 ## 2. `background` and `hero`
 
 ```js
-background: { image: 'img/1.jpg', position: '50% 0%' },   // position = CSS background-position
+background: { image: 'img/1.jpg', position: '50% 0%', tilt: true },   // position = CSS background-position
 hero: { title: 'Carmeca', tagline: "Europe's most …" }
 ```
 
 The background is `position: fixed` inside `.hero`. `.hero` is the stacking context, so the title's `mix-blend-mode: screen` blends with the image. The image is also preloaded before the loader disappears (with a 4 s fallback).
+
+**`tilt`** (optional) is the background tilt from the original demo: semi-transparent copies of the image move and turn slightly with the mouse and trail behind it. `true` gives 4 layers; a number (1–8) sets the number of layers, and more layers give a stronger ghosting effect. Leave it out or set `false` for a still image. It only runs with a mouse (or other fine pointer that can hover) and not when the visitor prefers reduced motion. Hovering the menu button lets the layers settle; while the menu is open they stop following the mouse.
+
+`template.js` writes it as `data-tilt="4"` on `.hero`; `multibox.js` adds the layers and tracks the mouse, and `css/template.css` (`.hero__bg-layer`) does the motion with CSS transitions, no animation library. Server-rendered pages (Zope) get the tilt by rendering the same attribute.
 
 ## 3. `grid`
 

@@ -1,11 +1,12 @@
 /**
  * multibox.js
- * Behaviour of the multibox menu: open/close, Esc, focus, loader and OSM maps.
+ * Behaviour of the multibox menu: open/close, Esc, focus, loader, OSM maps and background tilt.
  * Works on markup rendered by the server (Zope) or by js/template.js; load it after the markup.
  *
  * Markup it reads:
  *   <body class="loading" data-preload="img.jpg">   loader waits for this image (4 s fallback)
  *   <div class="box__map" data-map='{...}'>          center, zoom, scrollZoom, markers, tiles, attribution
+ *   <div class="hero" data-tilt="4">                 optional: background tilt with 4 layers (1–8)
  *   <script src="multibox.js" data-leaflet="…/">     optional: self-hosted leaflet.js/.css (default: unpkg with SRI)
  */
 {
@@ -113,6 +114,42 @@
         });
     }
     initMaps();
+
+    // ---------------------------------------------------------------- Background tilt
+    // Copies of the background image follow the mouse (motion in template.css).
+    // Only with a fine pointer that can hover, and not with reduced motion.
+
+    const tiltHero = document.querySelector('.hero[data-tilt]');
+    const tiltBg = tiltHero && tiltHero.querySelector('.hero__bg');
+    if ( tiltBg && matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches ) {
+        const layers = Math.min(Math.max(parseInt(tiltHero.dataset.tilt, 10) || 4, 1), 8);
+        const {backgroundImage, backgroundPosition} = getComputedStyle(tiltBg);
+        for (let l = 1; l <= layers; ++l) {
+            const layer = document.createElement('div');
+            layer.className = 'hero__bg-layer';
+            layer.style.backgroundImage = backgroundImage;
+            layer.style.backgroundPosition = backgroundPosition;
+            layer.style.setProperty('--l', l);
+            tiltBg.append(layer);
+        }
+        tiltBg.classList.add('hero__bg--tilt');
+
+        // One update per frame, with the latest mouse position (-1 … 1 across the viewport).
+        let lastEv, frame;
+        document.addEventListener('mousemove', (ev) => {
+            lastEv = ev;
+            if ( frame || menu?.classList.contains('menu--open') ) return;
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                tiltBg.style.setProperty('--mx', (lastEv.clientX / innerWidth * 2 - 1).toFixed(3));
+                tiltBg.style.setProperty('--my', (lastEv.clientY / innerHeight * 2 - 1).toFixed(3));
+            });
+        });
+
+        const openCtrl = menu?.querySelector('.action--menu');
+        openCtrl?.addEventListener('mouseenter', () => tiltBg.classList.add('hero__bg--rest'));
+        openCtrl?.addEventListener('mouseleave', () => tiltBg.classList.remove('hero__bg--rest'));
+    }
 
     // ---------------------------------------------------------------- Loader
 
