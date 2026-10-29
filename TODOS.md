@@ -31,5 +31,5 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 
 ## Known issues
 
-- [ ] Original demos (`index.html`, `index-css.html`), mobile (< 53em): `.content__title` / `.content__tagline` are hidden behind `.background` (confirmed in Chrome at 400px). Fix: `position: relative` on both. See `DOCUMENTATION.md` §1. Already fixed in the template.
+- [x] Original demos (`index.html`, `index-css.html`), mobile (< 53em): `.content__title` / `.content__tagline` were hidden behind `.background`. Fixed with `position: relative` on both in `css/base.css`.
 - [ ] `TiltFx.layout()` hardcodes `img/1.jpg` and ignores the inline background image on `.background`.

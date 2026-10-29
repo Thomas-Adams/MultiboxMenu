@@ -195,6 +195,7 @@ main {
 	text-transform: lowercase;
 	margin: 0;
 	color: var(--color-title);
+	position: relative;
 	z-index: 199;
 	cursor: default;
 }
@@ -208,6 +209,7 @@ main {
 	word-spacing: 0.25rem;
 	text-transform: uppercase;
 	text-align: center;
+	position: relative;
 	z-index: 199;
 	cursor: default;
 }
