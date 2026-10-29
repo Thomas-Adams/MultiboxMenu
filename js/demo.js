@@ -193,11 +193,15 @@
             this.initEvents();
         }
         layout() {
-            let inner = '';
+            // Use the image set on .background (inline style or CSS) for every layer.
+            const image = getComputedStyle(this.DOM.main).backgroundImage;
+            this.DOM.main.innerHTML = '';
             for (let i = 0; i <= this.layersTotal-1; ++i) {
-                inner +=  '<div class="background__copy" style="background-image: url(img/1.jpg)"></div>';
+                const layer = document.createElement('div');
+                layer.className = 'background__copy';
+                layer.style.backgroundImage = image;
+                this.DOM.main.appendChild(layer);
             }
-            this.DOM.main.innerHTML = inner;
             this.DOM.layers = Array.from(this.DOM.main.querySelectorAll('.background__copy'));
         }
         initEvents() {

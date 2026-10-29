@@ -85,7 +85,7 @@ A global flag turns the effect off:
 
 ### Reuse notes
 
-- The image URL is **hardcoded** in `layout()` (`img/1.jpg`), and the inline style on `.background` is ignored. For reuse, read it with `getComputedStyle(this.DOM.main).backgroundImage` instead.
+- `layout()` copies the image from `.background` (`getComputedStyle(this.DOM.main).backgroundImage`), so changing the inline style on `.background` changes all the layers too.
 - More layers or a larger `val` gives a stronger ghosting effect. Lower opacity makes it subtler.
 
 ---

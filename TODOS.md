@@ -32,4 +32,4 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 ## Known issues
 
 - [x] Original demos (`index.html`, `index-css.html`), mobile (< 53em): `.content__title` / `.content__tagline` were hidden behind `.background`. Fixed with `position: relative` on both in `css/base.css`.
-- [ ] `TiltFx.layout()` hardcodes `img/1.jpg` and ignores the inline background image on `.background`.
+- [x] `TiltFx.layout()` hardcoded `img/1.jpg`. It now reads the image from `.background` with `getComputedStyle()`.
