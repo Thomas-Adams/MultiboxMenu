@@ -9,6 +9,9 @@
  * http://www.codrops.com
  */
 {
+    // Anime.js (js/anime.min.js).
+    const {animate, stagger, utils} = anime;
+
     // Class Menu.
     class Menu {
         constructor(el) {
@@ -96,25 +99,28 @@
                 
                 if ( action === 'open' ) {
                     // Setting the initial values.
-                    TweenMax.set(el, config);
-                    TweenMax.set(innerEl, configInner);
+                    utils.set(el, config);
+                    utils.set(innerEl, configInner);
 
                     // Animate.
-                    TweenMax.to([el,innerEl], .9, {
-                        ease: Quint.easeOut,
+                    animate([el,innerEl], {
+                        duration: 900,
+                        ease: 'outQuint',
                         x: '0%',
                         y: '0%',
                         onComplete: () => animationEnd(pos)
                     });
                 }
                 else {
-                    TweenMax.to(el, 0.6, {
-                        ease: Quart.easeInOut,
+                    animate(el, {
+                        duration: 600,
+                        ease: 'inOutQuart',
                         x: config.x || 0,
                         y: config.y || 0
                     });
-                    TweenMax.to(innerEl, 0.6, {
-                        ease: Quart.easeInOut,
+                    animate(innerEl, {
+                        duration: 600,
+                        ease: 'inOutQuart',
                         x: configInner.x || 0,
                         y: configInner.y || 0,
                         onComplete: () => animationEnd(pos)
@@ -123,38 +129,42 @@
             });
 
             // Show/Hide open and close ctrls.
-            TweenMax.to(this.DOM.closeCtrl, 0.6, {
-                ease: action === 'open' ? Quint.easeOut : Quart.easeInOut,
-                startAt: action === 'open' ? {rotation: 0} : null,
+            // [from, to] arrays replace GSAP's startAt.
+            animate(this.DOM.closeCtrl, {
+                duration: 600,
+                ease: action === 'open' ? 'outQuint' : 'inOutQuart',
                 opacity: action === 'open' ? 1 : 0,
-                rotation: action === 'open' ? 180 : 270
+                rotate: action === 'open' ? [0, 180] : 270
             });
-            TweenMax.to(this.DOM.openCtrl, action === 'open' ? 0.6 : 0.3, {
-                delay: action === 'open' ? 0 : 0.3,
-                ease: action === 'open' ? Quint.easeOut : Quad.easeOut,
+            animate(this.DOM.openCtrl, {
+                duration: action === 'open' ? 600 : 300,
+                delay: action === 'open' ? 0 : 300,
+                ease: action === 'open' ? 'outQuint' : 'outQuad',
                 opacity: action === 'open' ? 0 : 1
             });
 
-            // Main links animation.
-            TweenMax.staggerTo(this.DOM.mainLinks, action === 'open' ? 0.9 : 0.2, {
-                ease: action === 'open' ? Quint.easeOut : Quart.easeInOut,
-                startAt: action === 'open' ? {y: '50%', opacity: 0} : null,
-                y: action === 'open' ? '0%' : '50%',
-                opacity: action === 'open' ? 1 : 0
-            }, action === 'open' ? 0.1 : -0.1);
+            // Main links animation (closing staggers from the last link).
+            animate(this.DOM.mainLinks, {
+                duration: action === 'open' ? 900 : 200,
+                delay: stagger(100, {from: action === 'open' ? 'first' : 'last'}),
+                ease: action === 'open' ? 'outQuint' : 'inOutQuart',
+                y: action === 'open' ? ['50%', '0%'] : '50%',
+                opacity: action === 'open' ? [0, 1] : 0
+            });
 
             // Sidemenu links animation.
-            TweenMax.staggerTo(this.DOM.sidemenuLinks, action === 'open' ? 0.5 : 0.2, {
-                ease: action === 'open' ? Quint.easeInOut : Quart.easeInOut,
-                startAt: action === 'open' ? {y: '100%'} : null,
-                y: action === 'open' ? '0%' : '100%'
-            }, action === 'open' ? 0.05 : -0.05);
+            animate(this.DOM.sidemenuLinks, {
+                duration: action === 'open' ? 500 : 200,
+                delay: stagger(50, {from: action === 'open' ? 'first' : 'last'}),
+                ease: action === 'open' ? 'inOutQuint' : 'inOutQuart',
+                y: action === 'open' ? ['100%', '0%'] : '100%'
+            });
 
             // The "Learn how to participate" menu link.
-            TweenMax.to(this.DOM.menulink, action === 'open' ? 0.9 : 0.6, {
-                ease: action === 'open' ? Quint.easeOut : Quart.easeInOut,
-                startAt: action === 'open' ? {x: '10%'} : null,
-                x: action === 'open' ? '0%' : '10%'
+            animate(this.DOM.menulink, {
+                duration: action === 'open' ? 900 : 600,
+                ease: action === 'open' ? 'outQuint' : 'inOutQuart',
+                x: action === 'open' ? ['10%', '0%'] : '10%'
             });
         }
     }
@@ -240,36 +250,41 @@
                     }
                 };
 
-                TweenMax.to(layer, 1.5, {
-                    ease: 'Power1.easeOut',
+                animate(layer, {
+                    duration: 1500,
+                    ease: 'outQuad',
                     x: transforms.translation.x,
                     y: transforms.translation.y,
-                    rotationX: transforms.rotation.x,
-                    rotationY: transforms.rotation.y,
+                    rotateX: transforms.rotation.x,
+                    rotateY: transforms.rotation.y,
                     scale: transforms.scale.v,
                 });
             });
         }
         // Scale up all the layers.
         zoom() {
-            TweenMax.staggerTo( this.DOM.layers, 1.5, {
-                ease: 'Expo.easeOut',
+            animate( this.DOM.layers, {
+                duration: 1500,
+                delay: stagger(40),
+                ease: 'outExpo',
                 x: 0,
                 y: 0,
-                rotationX: 0,
-                rotationY: 0,
+                rotateX: 0,
+                rotateY: 0,
                 scale: 1.1,
-            }, 0.04);
+            });
         }
         reset() {
-            TweenMax.staggerTo( this.DOM.layers, 1.5, {
-                ease: 'Expo.easeOut',
+            animate( this.DOM.layers, {
+                duration: 1500,
+                delay: stagger(70),
+                ease: 'outExpo',
                 x: 0,
                 y: 0,
-                rotationX: 0,
-                rotationY: 0,
+                rotateX: 0,
+                rotateY: 0,
                 scale: 1,
-            }, 0.07);
+            });
         }
     }
 

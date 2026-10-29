@@ -1,8 +1,8 @@
 # Multibox Menu: How It Works
 
 Notes on how the demo is built, so the same approach can be used for other grids and reveal menus.
-Files: `index.html`, `css/base.css`, `js/demo.js`. Libraries: TweenMax (GSAP 2) and imagesLoaded.
-CSS-only variant (no GSAP, no tilt): `index-css.html`, `css/menu-css.css`, `js/demo-css.js`. See section 6.
+Files: `index.html`, `css/base.css`, `js/demo.js`. Libraries: Anime.js 4 (`js/anime.min.js`, a slim build with only `animate`, `stagger` and `utils`) and imagesLoaded. The demo used TweenMax (GSAP 2) until October 2026.
+CSS-only variant (no animation library, no tilt): `index-css.html`, `css/menu-css.css`, `js/demo-css.js`. See section 6.
 Config-driven template built on the CSS-only variant: `template.html` + `site.config.js`. See `TEMPLATE.md`.
 
 ---
@@ -73,14 +73,14 @@ The mouse position is mapped linearly across the element's size: left/top edge g
 
 General formula: `value = (to - from) / size * mousePos + from`.
 
-Each update is `TweenMax.to(layer, 1.5, { ease: Power1.easeOut, ... })`. The **1.5 s ease-out lag** matters as much as the offsets. Every mousemove restarts the tween, so the layers trail behind the cursor smoothly.
+Each update is `animate(layer, { duration: 1500, ease: 'outQuad', ... })`. The **1.5 s ease-out lag** matters as much as the offsets. Every mousemove starts a new animation that replaces the running one (Anime.js's default `composition: 'replace'`), so the layers trail behind the cursor smoothly.
 
 ### Gating with `allowTilt`
 
 A global flag turns the effect off:
 
 - menu open, so the tilt stops (it starts again on close)
-- hover over the menu button runs `tilt.reset()`: layers stagger back to neutral (`Expo.easeOut`, 0.07 s stagger)
+- hover over the menu button runs `tilt.reset()`: layers stagger back to neutral (`outExpo`, 0.07 s stagger)
 - hover over the GitHub link runs `tilt.zoom()`: layers stagger to `scale: 1.1`
 
 ### Reuse notes
@@ -154,7 +154,7 @@ The box colour belongs on `.menu__item-inner` (`--color-bg-itemN`), **not** on t
 
 ## 4. Animations when the menu opens and closes
 
-Nearly all of the motion is **JavaScript (TweenMax)**, not CSS animations. CSS only sets the hidden starting states and the small hover transitions. Opening adds or removes `.menu--open` (which only changes pointer events) and starts the tweens in `Menu.toggle()`.
+Nearly all of the motion is **JavaScript (Anime.js)**, not CSS animations. CSS only sets the hidden starting states and the small hover transitions. Opening adds or removes `.menu--open` (which only changes pointer events) and starts the animations in `Menu.toggle()`.
 
 ### 4.1 The box reveal (counter-movement mask)
 
@@ -168,12 +168,12 @@ For each item, the **cell** and its **inner** element move by the same distance 
 | `rl` right → left | `x: 101%` | `x: -101%` |
 | *(none)* diagonal | `x,y: 101%` | `x,y: -101%` |
 
-Both then tween to `0%` together.
+Both then animate to `0%` together.
 
 ```
-open:   TweenMax.set(cell, config); TweenMax.set(inner, configInner);
-        TweenMax.to([cell, inner], 0.9, { x:'0%', y:'0%', ease: Quint.easeOut })
-close:  cell → config,  inner → configInner,  0.6 s, Quart.easeInOut
+open:   utils.set(cell, config); utils.set(inner, configInner);
+        animate([cell, inner], { duration: 900, x:'0%', y:'0%', ease: 'outQuint' })
+close:  cell → config,  inner → configInner,  600 ms, 'inOutQuart'
 ```
 
 **Why this works:** transform percentages are relative to the element's own size, and cell and inner are the same size. So `cell + inner = 0` at every frame and the **content stays still on screen**. Only the clipping window (the cell with `overflow: hidden`) slides over it. The result looks like a wipe or curtain reveal, not a sliding panel.
@@ -181,21 +181,21 @@ close:  cell → config,  inner → configInner,  0.6 s, Quart.easeInOut
 Details:
 - `101%` instead of `100%` avoids hairline seams from sub-pixel rounding.
 - Mixing directions (bt, lr, rl, tb) across neighbouring boxes is what makes the effect feel like many separate boxes.
-- `isAnimating` blocks clicks while the menu animates. It is released when the **last** item's tween finishes. That only works because every item uses the same duration and no delay. If you give items different timings, use a `TimelineMax` and its `onComplete` instead.
+- `isAnimating` blocks clicks while the menu animates. It is released when the **last** item's animation finishes. That only works because every item uses the same duration and no delay. If you give items different timings, use an Anime.js timeline (`createTimeline`, not in the slim build) and its `onComplete` instead.
 
 ### 4.2 Content and controls (run in parallel with the boxes)
 
 | Target | Open | Close |
 |---|---|---|
-| `.action--close` | opacity 0→1, rotate 0→180°, 0.6 s Quint.easeOut | opacity →0, rotate →270°, 0.6 s |
+| `.action--close` | opacity 0→1, rotate 0→180°, 0.6 s `outQuint` | opacity →0, rotate →270°, 0.6 s |
 | `.action--menu` | opacity →0, 0.6 s | opacity →1, 0.3 s after a **0.3 s delay** |
-| `.mainmenu__item` (big links) | `staggerTo`, from `y:50%, opacity:0`, 0.9 s, **stagger 0.1** | to `y:50%, opacity:0`, 0.2 s, **stagger −0.1** (reverse order) |
-| `.sidemenu__item-inner` (spans) | from `y:100%`, 0.5 s, stagger 0.05 | to `y:100%`, 0.2 s, stagger −0.05 |
+| `.mainmenu__item` (big links) | from `y:50%, opacity:0`, 0.9 s, **`stagger(100)`** | to `y:50%, opacity:0`, 0.2 s, **`stagger(100, {from: 'last'})`** (reverse order) |
+| `.sidemenu__item-inner` (spans) | from `y:100%`, 0.5 s, `stagger(50)` | to `y:100%`, 0.2 s, `stagger(50, {from: 'last'})` |
 | `.menu__item-link` | from `x:10%`, 0.9 s | to `x:10%`, 0.6 s |
 
-The side-menu links use a **line mask**. `.sidemenu__item` (`overflow: hidden`) holds a `span` that starts at `translateY(100%)` (set in CSS) and slides up into view. A negative stagger on close makes the items leave in reverse order.
+The side-menu links use a **line mask**. `.sidemenu__item` (`overflow: hidden`) holds a `span` that starts at `translateY(100%)` (set in CSS) and slides up into view. Staggering `from: 'last'` on close makes the items leave in reverse order.
 
-Easing pattern: **open = `Quint.easeOut`** (fast start, soft landing), **close = `Quart.easeInOut`** and shorter. Closing is meant to be quicker than opening.
+Easing pattern: **open = `outQuint`** (fast start, soft landing), **close = `inOutQuart`** and shorter. Closing is meant to be quicker than opening.
 
 ### 4.3 CSS hover transitions (desktop)
 
@@ -218,25 +218,30 @@ Easing pattern: **open = `Quint.easeOut`** (fast start, soft landing), **close =
 4. **JS:** the `Menu` class finds every `.menu__item` and reads `data-direction` on its own, so **new boxes need no JS changes**. Only box-specific content animations (like `mainLinks`/`sidemenuLinks`) have to be added to `toggle()`, in matching open and close forms.
 5. **Background effect (optional):** keep the background inside the hero's stacking context if you use blend modes, and add `translate3d(0,0,0)` to the animated layers.
 
-### Moving to GSAP 3
+### TweenMax → Anime.js 4 (how `demo.js` was ported)
 
-| TweenMax (here) | GSAP 3 |
+| TweenMax (before) | Anime.js 4 (now) |
 |---|---|
-| `TweenMax.to/set` | `gsap.to/set` |
-| `TweenMax.staggerTo(t, d, vars, 0.1)` | `gsap.to(t, { duration: d, ...vars, stagger: 0.1 })` |
-| `Quint.easeOut`, `Quart.easeInOut`, `Expo.easeOut` | `'power4.out'`, `'power3.inOut'`, `'expo.out'` |
-| `startAt: {...}` | `gsap.fromTo(...)` or still `startAt` |
-| `rotation`, `rotationX/Y` | unchanged |
+| `TweenMax.set(t, vars)` | `utils.set(t, vars)` |
+| `TweenMax.to(t, 0.9, vars)` | `animate(t, { duration: 900, ...vars })` (milliseconds) |
+| `TweenMax.staggerTo(t, d, vars, 0.1)` / `-0.1` | `animate(t, { ..., delay: stagger(100) })` / `stagger(100, {from: 'last'})` |
+| `startAt: {y: '50%'}` + `y: '0%'` | `y: ['50%', '0%']` (`[from, to]`) |
+| `Quint.easeOut`, `Quart.easeInOut`, `Quad.easeOut`, `Power1.easeOut`, `Expo.easeOut` | `'outQuint'`, `'inOutQuart'`, `'outQuad'`, `'outQuad'`, `'outExpo'` |
+| `rotation`, `rotationX/Y` | `rotate`, `rotateX/Y` |
+
+Anime.js only reads a target's **inline** transform as the starting value (not the CSS one), so set starting states with `utils.set()` or a `[from, to]` array, as `toggle()` does.
+
+`js/anime.min.js` is a slim build (15.7 KB gzipped; the full bundle is 40.5 KB, TweenMax was 38.3 KB). The header of the file has the esbuild command. If you need more of Anime.js (timelines, scroll, SVG), add the export to that command and rebuild.
 
 ---
 
 ## 6. CSS-only variant (`index-css.html`)
 
-The same menu without GSAP. Every box reveal and content animation is a CSS transition or keyframe animation. The background tilt (`TiltFx`) is left out, so the background is a static image.
+The same menu without an animation library. Every box reveal and content animation is a CSS transition or keyframe animation. The background tilt (`TiltFx`) is left out, so the background is a static image.
 
 | File | Role |
 |---|---|
-| `index-css.html` | Same markup as `index.html`, plus `--i`/`--n` stagger variables, ARIA attributes on the buttons, and no TweenMax |
+| `index-css.html` | Same markup as `index.html`, plus `--i`/`--n` stagger variables, ARIA attributes on the buttons, and no Anime.js |
 | `css/menu-css.css` | Loaded **after** `base.css` and overrides its hidden starting states. Contains all the motion |
 | `js/demo-css.js` | About 20 lines: toggles the state classes, closes on Esc, moves focus, preloads images |
 
@@ -257,16 +262,16 @@ Every animated element has two rules:
 .menu--open .thing { /* OPEN state   */ transition: /* used when OPENING */; }
 ```
 
-The browser always uses the `transition` of the state it is moving **to**. That's how opening and closing get different durations and easing curves (0.9 s ease-out in, 0.6 s ease-in-out out), as in the GSAP version.
+The browser always uses the `transition` of the state it is moving **to**. That's how opening and closing get different durations and easing curves (0.9 s ease-out in, 0.6 s ease-in-out out), as in the JS version.
 
 Easing equivalents used (as `:root` variables):
 
-| GSAP | CSS variable | `cubic-bezier` |
+| JS easing (TweenMax / Anime.js) | CSS variable | `cubic-bezier` |
 |---|---|---|
-| `Quint.easeOut` | `--ease-open` | `0.23, 1, 0.32, 1` |
-| `Quart.easeInOut` | `--ease-close` | `0.77, 0, 0.175, 1` |
-| `Quint.easeInOut` | `--ease-inout` | `0.86, 0, 0.07, 1` |
-| `Quad.easeOut` | `--ease-fade` | `0.25, 0.46, 0.45, 0.94` |
+| `Quint.easeOut` / `outQuint` | `--ease-open` | `0.23, 1, 0.32, 1` |
+| `Quart.easeInOut` / `inOutQuart` | `--ease-close` | `0.77, 0, 0.175, 1` |
+| `Quint.easeInOut` / `inOutQuint` | `--ease-inout` | `0.86, 0, 0.07, 1` |
+| `Quad.easeOut` / `outQuad` | `--ease-fade` | `0.25, 0.46, 0.45, 0.94` |
 
 ### 6.2 Box reveal with custom properties
 
@@ -305,11 +310,11 @@ When an element also has a hover transition (`color` on `.mainmenu__item`), it h
 
 ### 6.4 When a transition is not enough: the close button
 
-The GSAP version spins the close button 0→180° on open and continues 180→270° on close. A transition can only run backwards (180→0), so this uses two `@keyframes` (`closeCtrlIn`, `closeCtrlOut`).
+The JS version spins the close button 0→180° on open and continues 180→270° on close. A transition can only run backwards (180→0), so this uses two `@keyframes` (`closeCtrlIn`, `closeCtrlOut`).
 The exit animation is attached to `.menu--closed`, not to the base state. Otherwise it would play once when the page loads (a flash of the X fading out). That is why there is a third state class.
 Trade-off: keyframe animations jump instead of reversing smoothly when interrupted. That's fine for a small icon, but use transitions for the boxes.
 
-### 6.5 Accessibility extras (not in the GSAP version)
+### 6.5 Accessibility extras (not in the JS version)
 
 - `aria-label` on both buttons, and `aria-expanded` on the open button
 - Esc closes the menu

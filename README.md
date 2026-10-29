@@ -11,7 +11,7 @@ A simple grid-powered multibox menu that shows with a reveal animation.
 ## Credits
 
 - [imagesLoaded](https://imagesloaded.desandro.com/) by Dave DeSandro
-- [TweenMax](https://greensock.com/tweenmax) by Greensock
+- [Anime.js](https://animejs.com/) by Julian Garnier
 - Images from [Unsplash.com](https://unsplash.com/)
 - Map made with [Fantasy Map Generator](https://azgaar.github.io/Fantasy-Map-Generator/)
 

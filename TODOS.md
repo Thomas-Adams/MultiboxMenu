@@ -1,8 +1,8 @@
 # TODOs
 
-## Replace TweenMax / GSAP with an open-source alternative
+## Replace TweenMax / GSAP with an open-source alternative (done: Anime.js)
 
-The bundled `js/TweenMax.min.js` is GSAP **1.20.3** (2017): 115 KB raw, about 38 KB gzipped.
+The demo bundled `js/TweenMax.min.js`, GSAP **1.20.3** (2017): 115 KB raw, about 38 KB gzipped.
 GSAP has been free since 2025 (after Webflow bought it), but it uses GreenSock's own proprietary licence, **not an open-source licence**.
 
 Candidates (all MIT or built into the browser):
@@ -17,9 +17,9 @@ Candidates (all MIT or built into the browser):
 
 No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has had little maintenance.
 
-- [ ] Decide: CSS-only (done, `index-css.html`) vs. WAAPI vs. Motion vs. Anime.js for remaining JS animations
-- [ ] Port `TiltFx` (background tilt) to the chosen option, or rebuild it as JS writing `--mx/--my` + CSS transforms
-- [ ] Remove `js/TweenMax.min.js` once nothing uses it
+- [x] Decide: Anime.js 4.5 for `demo.js` (closest to GSAP, easiest port). `js/anime.min.js` is a slim build of `animate`/`stagger`/`utils`, 15.7 KB gzipped. CSS-only stays as `index-css.html`.
+- [x] Port the menu animations and `TiltFx` (background tilt) to Anime.js. See `DOCUMENTATION.md` §5 for the mapping.
+- [x] Remove `js/TweenMax.min.js`
 
 ## Template (`template.html`, see `TEMPLATE.md`)
 
@@ -27,7 +27,7 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 - [x] Pin Leaflet: `multibox.js` loads unpkg with SRI hashes; the Zope product self-hosts it (`static/leaflet`)
 - [ ] Choose an OSM tile provider for production (the `tile.openstreetmap.org` usage policy limits heavy use)
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
-- [ ] Optional: background tilt (`TiltFx`) as a config option, once the animation library is decided (see above)
+- [ ] Optional: background tilt (`TiltFx`) as a config option, using Anime.js like `demo.js`
 
 ## Known issues
 
