@@ -29,6 +29,35 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 - [ ] Optional: render the page at build time (e.g. a small Node/Vite script) so the content is in the HTML for SEO / no-JS
 - [x] Optional: background tilt (`TiltFx`) as a config option: `background.tilt` (`TEMPLATE.md` §2). Done with CSS transitions in `template.css` + `multibox.js`, no animation library.
 
+## Zope product (`Products.Codrops` in zope-codrops)
+
+### Header Navigation
+- [ ] Header with more than one line
+- [ ] Hide only part of the header on scroll
+
+### Sidebar
+- [ ] More Codrops sidebar demos: Blueprint-SlidePushMenus, MultiLevelPushMenu, MultiLevelMenu
+- [ ] Menu from a folder as source (like the header's)
+
+### Carousel
+- [ ] Fallback when the font stylesheet doesn't load
+- [ ] Option to hide the arrows and the indicators
+- [ ] Caption below the image (not only over it)
+
+### Card Grid
+- [ ] Masonry layout (Bootstrap's needs a JavaScript library; CSS `grid-template-rows: masonry` is not in all browsers yet)
+- [ ] Tabs in the card header that switch the card's content (now plain links, active only for the current page)
+- [ ] Check in the Edit tab that the small breakpoint is below the medium one
+- [ ] Card Grids inside a Card Grid
+- [ ] Spans with automatic columns: when fewer columns fit than an item spans, the grid can get wider than its place (between the medium and the small width)
+- [ ] Concept doc `docs/concepts/card-grid.md`
+
+### Multibox Site
+- [ ] The *Add Multibox Site* form is still published as `addSite` (`site.py`), unlike the other `manage_add*Form`s
+
+### Deployment
+- [ ] Change `user = admin:admin` in `buildout.cfg` before deploying
+
 ## Known issues
 
 - [x] Original demos (`index.html`, `index-css.html`), mobile (< 53em): `.content__title` / `.content__tagline` were hidden behind `.background`. Fixed with `position: relative` on both in `css/base.css`.
