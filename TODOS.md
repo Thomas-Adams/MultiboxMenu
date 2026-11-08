@@ -52,6 +52,19 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 - [ ] Spans with automatic columns: when fewer columns fit than an item spans, the grid can get wider than its place (between the medium and the small width)
 - [ ] Concept doc `docs/concepts/card-grid.md`
 
+### Generic Content (`docs/concepts/generic-content.md`, steps 1–12 done)
+- [ ] The import of definitions still refuses to replace a locked type; it could use the check of step 12 (`ContentType.content_errors()`)
+- [ ] Changing a locked type checks all affected content on every save; fine for now, an index or a background check if the amount of content grows
+- [ ] Export and import of the content itself (now only the type definitions)
+- [ ] Restrict where Content can be added (now anywhere), e.g. only in folders that allow it like the Card Grid's items
+- [ ] Line-based fields of Card/Teaser/Carousel (`Links`, …) become proper lists instead of multi-line text
+- [ ] Run the components' own checks (e.g. CSS lengths) for embedded Card/Teaser/Carousel too (now only in their own edit forms)
+- [ ] An index of references instead of scanning the values of all content before a delete, if the amount of content grows
+- [ ] Attachments (images) in rich text; Trix's are switched off for now
+- [ ] Optional: `nh3` instead of our own HTML cleaner (`richtext.py`), if the allow-list ever needs attributes or more tags
+- [ ] Review the `ContainerAssertions` for `datetime` types (restricted code can read them in the whole instance)
+- [ ] Test the editors (LiteVue) in the browser automatically; so far checked by hand with Puppeteer on saved pages
+
 ### Multibox Site
 - [ ] The *Add Multibox Site* form is still published as `addSite` (`site.py`), unlike the other `manage_add*Form`s
 
