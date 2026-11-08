@@ -53,7 +53,6 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 - [ ] Concept doc `docs/concepts/card-grid.md`
 
 ### Generic Content (`docs/concepts/generic-content.md`, steps 1–12 done)
-- [ ] The import of definitions still refuses to replace a locked type; it could use the check of step 12 (`ContentType.content_errors()`)
 - [ ] Changing a locked type checks all affected content on every save; fine for now, an index or a background check if the amount of content grows
 - [ ] Export and import of the content itself (now only the type definitions)
 - [ ] Restrict where Content can be added (now anywhere), e.g. only in folders that allow it like the Card Grid's items
