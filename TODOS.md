@@ -31,6 +31,17 @@ No longer actively developed: Popmotion (became Motion), Velocity.js. mo.js has 
 
 ## Zope product (`Products.Codrops` in zope-codrops)
 
+### Split Codrops into products (one step at a time)
+Pull the standalone components out of `Products.Codrops` as their own develop eggs with short names, in `~/Codrops/Zope/src/`. For each one, leave an alias module at the old path (e.g. `Products/Codrops/carousel.py`), so objects stored in `Data.fs` under the old class path still load.
+- [x] Step 0: `Products.Base`, the shared helpers (`items`: `set_schema_defaults`, `redirect`, `folder_options`, `Item`; `fields.Color`; `browser.urls.Resources`, one per `++resource++` folder; `browser.forms`: the ZMI widgets, `ZMIEditForm`, `ZMI_FORM`)
+- [x] Step 1: `Products.Carousel` (product `Carousel`, `++resource++carousel`, `asset_urls()` for pages that embed carousels). Add forms are now under `manage_addProduct/Carousel/`; the permission keeps its name `Codrops: Add Carousel`. Slide images no longer fall back to files in Codrops' `static/` (nothing stored used that)
+- [ ] Step 2: `Products.HeaderNav` (Header Navigation). First decide where `icons.py`, `static/bootstrap-icons/` and the link helpers in `browser/header.py` (`LinkRendering`, `link_url`, `target_attrs`, `ON_PAGE`, `SIDEBAR_TOGGLE`) go. The Sidebar uses them too, so probably `Products.Base` or the Header product, with the Sidebar depending on it
+- [ ] Step 3: `Products.Sidebar` (Sidebar, Sidebar Transitions, `sidebar_effects.py`)
+- [ ] Step 4: `Products.Stage` (Section Stage, `stage_transitions.py`, `stage-animations.css`). First turn the hard-coded section contents (Card Grid, Carousel, Header) into a registry the other products add themselves to
+- [ ] Stay in Codrops: Multibox Site and boxes, Card Grid / Cards, Page Layout. Generic Content maybe later; it's the largest piece
+- [ ] At the end: migrate `Data.fs` to the new class paths (e.g. with `zodbupdate`) and delete the alias modules
+- [ ] Afterwards: rename the `codrops-color` CSS classes in `Products.Base`'s `zmi_form.pt`
+
 ### Header Navigation
 - [ ] Header with more than one line
 - [ ] Hide only part of the header on scroll
