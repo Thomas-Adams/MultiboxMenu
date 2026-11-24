@@ -42,6 +42,15 @@ Pull the standalone components out of `Products.Codrops` as their own develop eg
 - [ ] At the end: migrate `Data.fs` to the new class paths (e.g. with `zodbupdate`) and delete the alias modules
 - [ ] Afterwards: rename the `codrops-color` CSS classes in `Products.Base`'s `zmi_form.pt`
 
+### Online help (for developers in the ZMI)
+- [x] Field help: a `description` on every schema field that isn't self-explanatory (shown under the field in the edit forms)
+- [x] Help tab (`@@help`, `Products.Base.browser.help`) on every Codrops and Carousel type: class docstring, hand-written `help/<Class>.md` of the product, a field reference generated from the schemas, the views registered for the object
+- [x] Hand-written help for the Carousel and the Carousel Slide
+- [ ] Hand-written `help/<Class>.md` for the Codrops types (Multibox Site, Section Stage, Header Navigation, Sidebar, Card Grid, Generic Content, ...); write each one when its product is split out (Steps 2–4), so it moves along
+- [ ] Generic Content (`Content`) isn't covered by the Help tab test (its constructor needs a type)
+- [ ] Theming types: no Help tab yet (own model, not the `Products.Base` forms)
+- [ ] Later: an external docs site (Sphinx or VitePress) from `docs/concepts/` and the `help/*.md` files
+
 ### Header Navigation
 - [ ] Header with more than one line
 - [ ] Hide only part of the header on scroll
